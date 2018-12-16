@@ -23,13 +23,25 @@ double GaussLegendre5(const std::function<double(double)> &f, double a, double b
 
 double CompositeSimpson(const std::function<double(double)> &f, const std::vector<double> &x)
 {
+	// convert into eigen vector
+	VectorXd _x = VectorXd::Map(x.data(), x.size());
+	double m = _x.size() - 1;
+	double a = _x(0);
+	double b = _x(m); // = last
 
-	// TODO: Task (b)
-	// ...
-	// ...
-	// ...
+	double part1 = (1.0 / 6) * (_x(1) - _x(0)) * f(a);
 
-	return .0;
+	VectorXd sum1 = (_x.tail(m - 1) - _x.head(m - 1)).cwiseProduct(_x.segment(1, m - 1).unaryExpr(f));
+	double part2 = (1.0 / 6) * sum1.sum();
+
+	VectorXd sum2_first = _x.tail(m) - _x.head(m);
+	VectorXd sum2_last = (0.5 * (_x.tail(m) + _x.head(m))).unaryExpr(f);
+	VectorXd sum2 = sum2_first.cwiseProduct(sum2_last);
+	double part3 = (2.0 / 3) * sum2.sum();
+
+	double part4 = (1.0 / 6) * (_x(m) - _x(m - 1)) * f(b);
+
+	return part1 + part2 + part3 + part4;
 }
 
 std::vector<double> LinSpace(int n, double a, double b)
