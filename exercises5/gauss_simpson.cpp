@@ -27,7 +27,7 @@ double CompositeSimpson(const std::function<double(double)> &f, const std::vecto
 	VectorXd _x = VectorXd::Map(x.data(), x.size());
 	double m = _x.size() - 1;
 	double a = _x(0);
-	double b = _x(m); // = last
+	double b = _x(m);
 
 	double part1 = (1.0 / 6) * (_x(1) - _x(0)) * f(a);
 
