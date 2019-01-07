@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 
 using namespace std;
+using namespace Eigen;
 
 struct Newton
 {
@@ -46,10 +47,14 @@ void Newton::Interpolate(const Eigen::VectorXd &y)
 // Evaluate the interpolant at x.
 double Newton::operator()(double x) const
 {
-	// TODO: Task (b)
-	// ...
-	// ...
-	return 0; // dummy
+	int n = _a.size() - 1;
+	double v = _a(n);
+	for (int i = n - 1; i >= 0; i--)
+	{
+		v *= (x - _x(i));
+		v += _a(i);
+	}
+	return v; // dummy
 }
 
 struct Lagrange
