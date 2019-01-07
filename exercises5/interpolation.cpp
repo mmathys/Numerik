@@ -1,6 +1,7 @@
 #include <iostream>
-
 #include <Eigen/Dense>
+
+using namespace std;
 
 struct Newton
 {
@@ -16,28 +17,39 @@ struct Newton
 // Compute the coefficients in the Newton basis.
 void Newton::Interpolate(const Eigen::VectorXd &y)
 {
-	_a = y;
-	int n = _a.size();
-	for (int j = 0; j < n - 1; ++j)
+	int n = _x.size() - 1;
+
+	Eigen::MatrixXd A(n + 1, n + 1);
+	for (int i = 0; i < n + 1; i++)
 	{
-		for (int i = n - 1; i > j; --i)
+		A(i, 0) = 1;
+		int t = _x(i);
+		for (int j = 1; j <= i; j++)
 		{
-			_a(i) = (_a(i) - _a(i - 1)) / (_x(i) - _x(i - 1 - j));
+			A(i, j) = A(i, j - 1) * (_x(i) - _x(j - 1));
 		}
 	}
-	std::cout << _a << std::endl;
+
+	//cout << A << endl;
+	//cout << _a.size() << endl;
+	//cout << y.size() << endl;
+
+	_a = A.partialPivLu().solve(y);
+	//cout << _a << endl;
+
+	// TODO: Task (a)
+	// ...
+	// compute _a
+	// ...
 }
 
 // Evaluate the interpolant at x.
 double Newton::operator()(double x) const
 {
-	int n = _a.size();
-	double y = _a(n - 1);
-	for (int i = n - 2; i >= 0; --i)
-	{
-		y = y * (x - _x(i)) + _a(i);
-	}
-	return y;
+	// TODO: Task (b)
+	// ...
+	// ...
+	return 0; // dummy
 }
 
 struct Lagrange
@@ -55,34 +67,19 @@ struct Lagrange
 // Compute the weights l for given nodes x.
 Lagrange::Lagrange(const Eigen::VectorXd &x) : _x(x), _l(x.size()), _y(x.size())
 {
-	int n = _x.size();
-	for (int j = 0; j < n; ++j)
-	{
-		double dw = 1.0;
-		for (int i = 0; i < n; ++i)
-		{
-			if (i != j)
-				dw *= _x(j) - _x(i);
-		}
-		_l(j) = 1.0 / dw;
-	}
+	// TODO: Task (c)
+	// ...
+	// compute _l
+	// ...
 }
 
 // Evaluate the interpolant at x.
 double Lagrange::operator()(double x) const
 {
-	int n = _x.size();
-	Eigen::VectorXd L(n);
-	double wx = 1.0;
-	for (int i = 0; i < n; ++i)
-	{
-		wx *= x - _x(i);
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		L(i) = wx * _l(i) / (x - _x(i));
-	}
-	return _y.dot(L);
+	// TODO: Task (d)
+	// ...
+	// ...
+	return 0; // dummy
 }
 
 // Runge function
