@@ -72,19 +72,38 @@ struct Lagrange
 // Compute the weights l for given nodes x.
 Lagrange::Lagrange(const Eigen::VectorXd &x) : _x(x), _l(x.size()), _y(x.size())
 {
-	// TODO: Task (c)
-	// ...
-	// compute _l
-	// ...
+	int n = _l.size();
+	for (int i = 0; i < n; i++)
+	{
+		_l(i) = 1;
+		for (int j = 0; j < n; j++)
+		{
+			if (i == j)
+				continue;
+			_l(i) *= 1 / (_x(i) - _x(j));
+		}
+	}
 }
 
 // Evaluate the interpolant at x.
 double Lagrange::operator()(double x) const
 {
-	// TODO: Task (d)
-	// ...
-	// ...
-	return 0; // dummy
+	double q = 0;
+	int n = _y.size() - 1;
+
+	// calculate w
+	double w = 1;
+	for (int i = 0; i <= n; i++)
+	{
+		w *= (x - _x(i));
+	}
+
+	for (int i = 0; i <= n; i++)
+	{
+		double L = w * _l(i) / (x - _x(i));
+		q += _y(i) * L;
+	}
+	return q; // dummy
 }
 
 // Runge function
