@@ -133,15 +133,47 @@ struct sparse_vec
 	static sparse_vec conv(const sparse_vec &a, const sparse_vec &b)
 	{
 		sparse_vec out(a.len + b.len - 1);
-		//TODO
+		for (auto x : a.duplets)
+		{
+			for (auto y : b.duplets)
+			{
+				out.append(x.ind + y.ind, x.val * y.val);
+			}
+		}
 		return out;
 	}
 
 	static sparse_vec fft(const sparse_vec &x)
 	{
 		int n = x.len;
+		if (n <= 1)
+			return x;
+
 		sparse_vec tot(n);
-		//TODO
+		sparse_vec even(n / 2);
+		sparse_vec odd(n / 2);
+		for (auto duplet : x.duplets)
+		{
+			if (duplet.ind % 2 == 0)
+				even.append(duplet.ind / 2, duplet.val);
+			else
+				odd.append((duplet.ind - 1) / 2, duplet.val);
+		}
+
+		sparse_vec f0 = fft(even);
+		sparse_vec f1 = fft(odd);
+
+		T omega = exp(-2. * PI / n * I);
+		T s(1., 0.);
+
+		for (int k = 0; k < n; k++)
+		{
+			tot.append(k, f0.get_val(k % (n / 2)) + f1.get_val(k % (n / 2)) * s);
+			s *= omega;
+		}
+
+		tot.cleanup();
+
 		return tot;
 	}
 
@@ -199,6 +231,17 @@ int main()
 	c.cleanup();
 	cout << "Correct exact discrete convolution between x and y: (1,(41,0)),(2,(14.922,-42.8)),(3,(26.01,13.26)),(4,(-6.2,17.7)),(5,(15.01,37.6386)),(6,(-7.184,16.28)),(7,(-9.6,16)),\n";
 	cout << "conv(x,y) = " << c.to_string();
+
+	sparse_vec<complex<double>> test(3);
+	test.append(0, complex<double>(1, 0));
+	test.append(1, complex<double>(2, 0));
+	test.append(2, complex<double>(3, 0));
+	x.cleanup();
+	auto t = sparse_vec<complex<double>>::fft(test);
+	t.cleanup();
+	cout << "Correct exact fft of test: (0,(3,0)),(1,(3,-1.73205)),(2,(3,0))\n";
+	cout << "fft(x) = " << t.to_string();
+
 	auto cf = sparse_vec<complex<double>>::conv_fft(x, y);
 	cf.cleanup();
 	cout << "conv_fft(x,y) = " << cf.to_string();
