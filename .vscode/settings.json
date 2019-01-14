@@ -13,6 +13,7 @@
         "typeinfo": "cpp",
         "algorithm": "cpp",
         "vector": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "svd": "cpp"
     }
 }
