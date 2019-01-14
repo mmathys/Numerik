@@ -5,9 +5,6 @@
 #include "writer.hpp"
 #include <assert.h>
 
-using namespace std;
-using namespace Eigen;
-
 /// Uses the explicit Euler method to compute y from time 0 to time T
 /// where y is a 2x1 vector solving the linear system of ODEs as in the exercise
 ///
@@ -20,27 +17,36 @@ using namespace Eigen;
 /// The first component of y (the position) will be stored to y1, the second component (the velocity) to y2. The i-th entry of y1 (resp. y2) will contain the first (resp. second) component of y at time i*h.
 ///
 
+using namespace std;
+using namespace Eigen;
+
 //----------------explicitEulerBegin----------------
 void explicitEuler(std::vector<double> &y1, std::vector<double> &y2, std::vector<double> &time,
 				   const Eigen::Vector2d &y0,
 				   double zeta, double h, double T)
 {
+	int steps = T / h;
+	int size = steps + 1;
+	VectorXd Time = VectorXd::LinSpaced(size, 0, T);
+	assert(Time.size() == size);
+	MatrixXd Y(size, 2);
+	Y(0, 0) = y0(0);
+	Y(0, 1) = y0(1);
 	MatrixXd A(2, 2);
-	A << 0., 1., -1., -2. * zeta;
-	int size = T/h;
-	MatrixXd y(2, size + 1); // includes also state at time 0.
-	y(0, 0) = y0(0);
-	y(1, 0) = y0(1);
+	A << 0, 1, -1, -2 * zeta;
 
-	for(int i = 1; i < size + 1; i++) {
-		y.col(i) = y.col(i - 1) + h * A * y.col(i - 1);
+	for (int i = 1; i < size; i++)
+	{
+		VectorXd res = Y.row(i - 1).transpose() + h * A * Y.row(i - 1).transpose();
+		Y.row(i) = res.transpose();
 	}
 
-	// convert into std vectors
-	for(int i = 0; i < size + 1; i++) {
-		y1.push_back(y(0, i));
-		y2.push_back(y(1, i));
-		time.push_back(T/size * i);
+	// convert eigen vectors into std vectors
+	for (int i = 0; i < size; i++)
+	{
+		time.push_back(Time(i));
+		y1.push_back(Y(i, 0));
+		y2.push_back(Y(i, 1));
 	}
 }
 //----------------explicitEulerEnd----------------
@@ -51,9 +57,35 @@ void implicitEuler(std::vector<double> &y1, std::vector<double> &y2, std::vector
 				   const Eigen::Vector2d &y0,
 				   double zeta, double h, double T)
 {
-	// TODO: Task (d)
-	// ...
-	// ...
+	int steps = T / h;
+	int size = steps + 1;
+	VectorXd Time = VectorXd::LinSpaced(size, 0, T);
+	assert(Time.size() == size);
+	MatrixXd Y(size, 2);
+	Y(0, 0) = y0(0);
+	Y(0, 1) = y0(1);
+	MatrixXd A(2, 2);
+	A << 0, 1, -1, -2 * zeta;
+
+	for (int i = 1; i < size; i++)
+	{
+		MatrixXd B = MatrixXd::Identity(2, 2) - h * A;
+		// B * y_k+1 = y_k
+		VectorXd prev = Y.row(i - 1).transpose();
+		VectorXd res = B.fullPivLu().solve(prev);
+		Y.row(i) = res.transpose();
+	}
+
+	time.resize(0);
+	y1.resize(0);
+	y2.resize(0);
+	// convert eigen vectors into std vectors
+	for (int i = 0; i < size; i++)
+	{
+		time.push_back(Time(i));
+		y1.push_back(Y(i, 0));
+		y2.push_back(Y(i, 1));
+	}
 }
 //----------------implicitEulerEnd----------------
 
@@ -83,8 +115,9 @@ int main()
 	writeToFile("velocity_expl.txt", y2);
 	writeToFile("time_expl.txt", time);
 	std::vector<double> energy(y2.size());
-	Energy(y2, energy);
+	//Energy(y2, energy);
 	writeToFile("energy_expl.txt", energy);
+
 	y1.assign(y1.size(), 0);
 	y2.assign(y2.size(), 0);
 	time.assign(time.size(), 0);
@@ -93,7 +126,7 @@ int main()
 	writeToFile("position_impl.txt", y1);
 	writeToFile("velocity_impl.txt", y2);
 	writeToFile("time_impl.txt", time);
-	Energy(y2, energy);
+	//Energy(y2, energy);
 	writeToFile("energy_impl.txt", energy);
 
 	return 0;
