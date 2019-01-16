@@ -25,11 +25,21 @@ double llsq_gsol(const MatrixXd &A, const VectorXd &b, VectorXd &x)
     MatrixXd U = svd.matrixU();
     MatrixXd V = svd.matrixV();
     VectorXd sv = svd.singularValues();
+    // tol
+    double tol = 1e-12;
+    sv = sv.unaryExpr([&tol](double e) {
+        if (e > tol)
+            return e;
+        else
+            return 0.;
+    });
     MatrixXd Sigma = sv.asDiagonal();
 
     cout << "moore penrose..." << endl;
     // calculate x with moore-penrose pseudo inverse
     x = V * Sigma.inverse() * U.transpose() * b;
+
+    cout << Sigma.inverse() << endl;
 
     cout << "x = " << endl
          << x << endl;

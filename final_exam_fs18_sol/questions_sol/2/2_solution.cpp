@@ -91,6 +91,9 @@ double llsq_gsol(const MatrixXd &A, const VectorXd &b, VectorXd &x)
 
 	x = V_ * invD_ * U_.transpose() * b; // Generalized solution
 
+	std::cout << "Sigma^-1 =" << std::endl
+			  << invD_ << std::endl;
+
 	std::cout << "x =" << std::endl
 			  << x << std::endl;
 

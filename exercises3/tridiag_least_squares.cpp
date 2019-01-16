@@ -1,6 +1,6 @@
 #include <iostream>
-#include <Eigen/Dense>
 
+#include <Eigen/Dense>
 using namespace Eigen;
 using namespace std;
 
@@ -12,35 +12,19 @@ using namespace std;
 Eigen::Vector2d lsqEst(const Eigen::VectorXd &z, const Eigen::VectorXd &c)
 {
 	Eigen::Vector2d x;
-
 	int n = z.size();
-	cout << "size = " << n << endl;
+	assert(z.size() == c.size());
 
-	cout << "Vector z = " << endl;
-	cout << z << endl;
+	// construct A
+	MatrixXd A(n, 2);
+	A.col(0) = z;
+	A.block(0, 1, n - 1, 1) = z.tail(n - 1);
+	A.block(1, 1, n - 1, 1) += z.head(n - 1);
 
-	cout << "Vector c = " << endl;
-	cout << c << endl;
+	cout << "A =\n"
+		 << A << endl;
 
-	// normal equation
-	MatrixXd A(n, n);
-	for (int i = 0; i < n; i++)
-	{
-		int diagSize = A.diagonal(i).size();
-		VectorXd diag = z(i) * VectorXd::Ones(diagSize);
-		A.diagonal(i) = diag;
-		A.diagonal(-i) = diag;
-	}
-
-	cout << "Matrix A = " << endl;
-	cout << A << endl;
-
-	// bad normal equation
-	//VectorXd c2 = A.transpose() * c;
-	//VectorXd A2 = A.transpose() * A;
-	//x = A2.fullPivLu().solve(c2);
-
-	return x;
+	return (A.transpose() * A).fullPivLu().solve(A.transpose() * c);
 }
 
 int main()

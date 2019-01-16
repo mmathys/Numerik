@@ -14,6 +14,9 @@
         "algorithm": "cpp",
         "vector": "cpp",
         "complex": "cpp",
-        "svd": "cpp"
+        "svd": "cpp",
+        "charconv": "cpp",
+        "cuchar": "cpp",
+        "cstdint": "cpp"
     }
 }
