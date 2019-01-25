@@ -16,5 +16,10 @@ int main()
     const std::vector<double> c = {-0.90617984593, -0.53846931010, 0.0, 0.53846931010, 0.90617984593};
     VectorXd C = VectorXd::Map(c.data(), c.size());
 
+    /**
+     * std vector from eigen vector
+     */
+    C.data();
+
     return 0;
 }

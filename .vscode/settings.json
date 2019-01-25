@@ -18,6 +18,9 @@
         "charconv": "cpp",
         "cuchar": "cpp",
         "cstdint": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "iterator": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }

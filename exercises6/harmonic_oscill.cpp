@@ -88,9 +88,10 @@ void implicitEuler(std::vector<double> &y1, std::vector<double> &y2, std::vector
 void Energy(const std::vector<double> &v, std::vector<double> &energy)
 {
 	assert(v.size() == energy.size());
-	// TODO: Task (e)
-	// ...
-	// ...
+	for (int i = 0; i < v.size(); i++)
+	{
+		energy[i] = 0.5 * pow(v[i], 2.);
+	}
 }
 //----------------energyEnd----------------
 
