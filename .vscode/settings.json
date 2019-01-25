@@ -17,6 +17,7 @@
         "svd": "cpp",
         "charconv": "cpp",
         "cuchar": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "iosfwd": "cpp"
     }
 }

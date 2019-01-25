@@ -5,8 +5,8 @@
 #include "writer.hpp"
 #include <assert.h>
 
-using namespace Eigen;
 using namespace std;
+using namespace Eigen;
 
 /// Uses the explicit Euler method to compute y from time 0 to time T
 /// where y is a 2x1 vector solving the linear system of ODEs as in the exercise
@@ -25,28 +25,22 @@ void explicitEuler(std::vector<double> &y1, std::vector<double> &y2, std::vector
 				   const Eigen::Vector2d &y0,
 				   double zeta, double h, double T)
 {
-	int n = T / h;
-	MatrixXd y(2, n + 1);
-	y.col(0) = y0;
 	MatrixXd A(2, 2);
-	A << 0, 1, -1, -2 * zeta;
+	A << 0., 1., -1., -2. * zeta;
+	int size = T/h;
+	MatrixXd y(2, size + 1); // includes also state at time 0.
+	y(0, 0) = y0(0);
+	y(1, 0) = y0(1);
 
-	for (int i = 1; i < n + 1; i++)
-	{
-		VectorXd last = y.col(i - 1);
-		y.col(i) = last + h * A * last;
+	for(int i = 1; i < size + 1; i++) {
+		y.col(i) = y.col(i - 1) + h * A * y.col(i - 1);
 	}
 
-	// convert to std vectors
-	y1.resize(0);
-	y2.resize(0);
-	time.resize(0);
-
-	for (int i = 0; i < n + 1; i++)
-	{
+	// convert into std vectors
+	for(int i = 0; i < size + 1; i++) {
 		y1.push_back(y(0, i));
 		y2.push_back(y(1, i));
-		time.push_back(i * h);
+		time.push_back(T/size * i);
 	}
 }
 //----------------explicitEulerEnd----------------
@@ -57,9 +51,28 @@ void implicitEuler(std::vector<double> &y1, std::vector<double> &y2, std::vector
 				   const Eigen::Vector2d &y0,
 				   double zeta, double h, double T)
 {
-	// TODO: Task (d)
-	// ...
-	// ...
+	MatrixXd A(2, 2);
+	A << 0., 1., -1., -2. * zeta;
+	int size = T/h;
+	MatrixXd y(2, size + 1); // includes also state at time 0.
+	y(0, 0) = y0(0);
+	y(1, 0) = y0(1);
+
+	for(int i = 1; i < size + 1; i++) {
+		y.col(i) = (MatrixXd::Identity(2, 2) - h * A).fullPivLu().solve(y.col(i - 1));
+	}
+
+	cout << y << endl;
+
+	// convert into std vectors
+	y1.resize(0);
+	y2.resize(0);
+	time.resize(0);
+	for(int i = 0; i < size + 1; i++) {
+		y1.push_back(y(0, i));
+		y2.push_back(y(1, i));
+		time.push_back(T/size * i);
+	}
 }
 //----------------implicitEulerEnd----------------
 

@@ -16,3 +16,11 @@ https://imgur.com/a/49LjCLZ
 
 HOW TO CALCULATE convolution of non-periodic signals
 https://imgur.com/a/Jsa8c2A
+
+HOW TO PERFORM AN AFFINE TRANSFORMATION
+https://imgur.com/a/TmpSVj4
+
+Steps for Gaussian Quadrature Rule
+Solution of 5.2e
+
+Efficient evaluation of composite simpson rule.
