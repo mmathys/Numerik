@@ -57,9 +57,29 @@ void implicitEuler(std::vector<double> &y1, std::vector<double> &y2, std::vector
 				   const Eigen::Vector2d &y0,
 				   double zeta, double h, double T)
 {
-	// TODO: Task (d)
-	// ...
-	// ...
+	int n = T / h;
+	MatrixXd y(2, n + 1);
+	y.col(0) = y0;
+	MatrixXd A(2, 2);
+	A << 0, 1, -1, -2 * zeta;
+
+	for (int i = 1; i < n + 1; i++)
+	{
+		MatrixXd M = MatrixXd::Identity(2, 2) - h * A;
+		y.col(i) = M.fullPivLu().solve(y.col(i - 1));
+	}
+
+	// convert to std vectors
+	y1.resize(0);
+	y2.resize(0);
+	time.resize(0);
+
+	for (int i = 0; i < n + 1; i++)
+	{
+		y1.push_back(y(0, i));
+		y2.push_back(y(1, i));
+		time.push_back(i * h);
+	}
 }
 //----------------implicitEulerEnd----------------
 
