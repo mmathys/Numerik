@@ -24,3 +24,27 @@ Steps for Gaussian Quadrature Rule
 Solution of 5.2e
 
 Efficient evaluation of composite simpson rule.
+
+inverse of diagonal matrices
+inverse of orthonormal matrices
+inverse of upper/lower triangular matrices
+http://graphics.ics.uci.edu/ICS6N/NewLectures/Lecture5.pdf
+
+6.2f solution: how to find the biggest step size of a runge-kutta approximation of a specific ODE.
+
+how to differentiate between algebraic convergence and exponential convergence:
+https://relate.cs.illinois.edu/course/cs357-f17/f/images/ref-algebraic.pdf
+
+how to differentiate between first order convergence and second order convergence
+=> log log plot; if m = -1 => first order; m = -2 => second order
+
+
+How to check whether FPI converges at least linearly
+|Phi'(t)| < 1 in specified range.
+How to check whether FPI converges at least quadratically
+|Phi''(t)| = 0 in specified range.
+--> see ex12
+--> FPI graph with X.
+
+Newton's method is always quadratically convergent
+

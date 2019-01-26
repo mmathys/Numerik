@@ -78,13 +78,14 @@ int main()
 	int J = n.size();
 	std::vector<double> h(J);
 	std::vector<double> error(J);
+	double exact = exp(-2);
 	for (int j = 0; j < J; ++j)
 	{
 		h[j] = 1. / n[j];
 		std::vector<double> t = LinSpace(n[j] + 1, .0, T);
 		std::vector<double> y = Heun(f, t, .0);
-		// TODO: Task (g)
 		// compute the error for step size h[j]
+		error[j] = abs(exact - y[y.size() - 1]);
 	}
 
 	std::cout << "h = " << h << std::endl;
