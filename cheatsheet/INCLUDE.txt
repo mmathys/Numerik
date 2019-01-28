@@ -4,15 +4,10 @@ strassen algo
 
 rezept moore penrose pseudoinverse (rezept general solution least squares) (welche basis...)
 
-
 IMPORTANT TRICKS
-
-Inverse of diagonal matrix: d_i := 1/d_i for each entry. ATTENTION: trim beforehand (use double tol = 1e-12;)
-
 
 HOW TO CALCULATE moore-penrose pseudoinverse with SVD. where r is rank
 https://imgur.com/a/49LjCLZ
-
 
 HOW TO CALCULATE convolution of non-periodic signals
 https://imgur.com/a/Jsa8c2A
@@ -25,6 +20,7 @@ Solution of 5.2e
 
 Efficient evaluation of composite simpson rule.
 
+Inverse of diagonal matrix: d_i := 1/d_i for each entry. ATTENTION: trim beforehand (use double tol = 1e-12;)
 inverse of diagonal matrices
 inverse of orthonormal matrices
 inverse of upper/lower triangular matrices
@@ -45,6 +41,3 @@ How to check whether FPI converges at least quadratically
 |Phi''(t)| = 0 in specified range.
 --> see ex12
 --> FPI graph with X.
-
-Newton's method is always quadratically convergent
-
